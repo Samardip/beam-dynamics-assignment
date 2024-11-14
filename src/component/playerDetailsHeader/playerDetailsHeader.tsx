@@ -14,6 +14,8 @@ export const PlayerDetailsHeader = ({ isRoasterSelected }: {
     const { id } = useParams();
     const dispatch = useDispatch();
     const [isEditing, setIsEditing] = useState(false);
+    const [showEdit, setShowEdit] = useState(false);
+
     const fileData = useSelector((state: any) => state.app.fileDetails) || {};
     const playerData = useSelector((state: any) => state.app.playerDetails) || [];
     const defaultPlayerDetails = useSelector((state: any) => state.app.defaultPlayerDetails) || [];
@@ -51,12 +53,12 @@ export const PlayerDetailsHeader = ({ isRoasterSelected }: {
     const handleSearchChange = useCallback((value: string) => {
         // dispatch(appActions.updatePlayerDetails(defaultPlayerDetails)); // Make sure 'defaultPlayerDetails' is spelled correctly
         setSearchTerm(value);
-    
+
         let searchedItems = defaultPlayerDetails.filter((item: any) => {
-            return item.playerName.toLowerCase().includes(value.toLowerCase()) || 
-                   item.position.toLowerCase().includes(value.toLowerCase());
+            return item.playerName.toLowerCase().includes(value.toLowerCase()) ||
+                item.position.toLowerCase().includes(value.toLowerCase());
         });
-    console.log(searchedItems,defaultPlayerDetails)
+        console.log(searchedItems, defaultPlayerDetails)
         if (value) {
             dispatch(appActions.updatePlayerDetails(searchedItems));
         } else {
@@ -72,37 +74,37 @@ export const PlayerDetailsHeader = ({ isRoasterSelected }: {
                 <div className='text-[15px] font-semibold text-custom-text-3'>Import List</div>
                 <div><KeyboardArrowRight /></div>
                 <div><MenuIcon className='text-custom-primary-1' /></div>
-
-                <div className='text-[20px] font-semibold text-custom-primary-1'>
-                    {isEditing ? (
-                        <TextField
-                            value={teamName}
-                            onChange={handleInputChange}
-                            // onBlur={handleEvent}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                    handleEvent()
-                                }
-                            }}
-                            autoFocus
-                            size="small"
-                            variant="standard"
-                            InputProps={{
-                                style: { color: 'rgba(203, 203, 203, 1)' }, // Set text color to white
-                            }}
-                        />
-                    ) : (
-                        <span className="cursor-pointer">
-                            {teamName}
-                        </span>
-                    )}
+                <div className='flex gap-2' onMouseEnter={() => { setShowEdit(true) }} onMouseLeave={() => { setShowEdit(false) }}>
+                    <div className='text-[20px] font-semibold text-custom-primary-1' >
+                        {isEditing ? (
+                            <TextField
+                                value={teamName}
+                                onChange={handleInputChange}
+                                // onBlur={handleEvent}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        handleEvent()
+                                    }
+                                }}
+                                autoFocus
+                                size="small"
+                                variant="standard"
+                                InputProps={{
+                                    style: { color: 'rgba(203, 203, 203, 1)' }, // Set text color to white
+                                }}
+                            />
+                        ) : (
+                            <span className="cursor-pointer">
+                                {teamName}
+                            </span>
+                        )}
+                    </div>
+                    {
+                        (showEdit||showEditIcon) && <IconButton onClick={handleEditClick} size="small">
+                            <Edit fontSize='small' className='!flex' style={{ color: 'rgba(254, 160, 19, 1)' }} />
+                        </IconButton>
+                    }
                 </div>
-                {
-                    showEditIcon && <IconButton onClick={handleEditClick} size="small">
-                        <Edit fontSize='small' className='!flex' style={{ color: 'rgba(254, 160, 19, 1)' }} />
-                    </IconButton>
-                }
-
             </div>
             <div className='flex gap-2 justify-center items-center'>
                 <div>
@@ -110,6 +112,7 @@ export const PlayerDetailsHeader = ({ isRoasterSelected }: {
                         showSearchButton={true}
                         value={searchTerm}
                         onChange={(e) => handleSearchChange(e.target.value)}
+                        onClear={() => handleSearchChange('')}
                     />
                 </div>
                 <div className='flex justify-center items-center border-[1px] border-custom-text-4 rounded-[8px] h-[46px]'>

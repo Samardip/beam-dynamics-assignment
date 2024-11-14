@@ -62,7 +62,7 @@ const RoasterTable = () => {
         {
             accessorKey: 'date',
             header: 'Import Date',
-            enableSorting: false,
+            enableSorting: true,
             // size: 0
         },
         {

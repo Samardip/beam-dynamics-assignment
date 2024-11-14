@@ -4,9 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { appActions } from '../../context/app-slice';
 
 export const PaginationBar = ({ isRoster = false, itemsPerPageOptions = [20, 50, 100] }) => {
-  const playerData = useSelector((state: any) => state.app.playerDetails);
+  const playerData = useSelector((state: any) => state.app.playerDetails)||[];
   // const memoizedPlayerData = useMemo(() => playerData || [], [playerData]);
-  const roasterData = useSelector((state: any) => state.app.roasterDetails);
+  const roasterData = useSelector((state: any) => state.app.roasterDetails)||[];
   // const memoizedRoasterData = useMemo(() => roasterData || [], [roasterData]);
   let totalItems = !isRoster ? playerData.length : roasterData.length;
   const [currentPage, setCurrentPage] = useState(totalItems === 0 ? 0 : 1);
@@ -29,14 +29,14 @@ export const PaginationBar = ({ isRoster = false, itemsPerPageOptions = [20, 50,
   };
   useEffect(() => {
     const start = startItem - 1 < 0 ? 0 : startItem - 1;
-    const paginatedData = roasterData.slice(start, endItem);
+    const paginatedData = roasterData?.slice(start, endItem);
 console.log(roasterData,start, endItem,'pagiation')
     dispatch(appActions.updateRosterTablePaginatedDetails(paginatedData));
   }, [roasterData, currentPage, itemsPerPage, startItem, endItem]);
 
   useEffect(() => {
     const start = startItem - 1 < 0 ? 0 : startItem - 1;
-    const paginatedData = playerData.slice(start, endItem);
+    const paginatedData = playerData?.slice(start, endItem);
     dispatch(appActions.updatePlayerTablePaginatedDetails(paginatedData));
   }, [playerData, currentPage, itemsPerPage, startItem, endItem]);
   return (

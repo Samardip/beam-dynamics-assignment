@@ -52,6 +52,7 @@ export const ImportRoaster = () => {
                             showSearchButton={true}
                             value={searchTerm}
                             onChange={(e) => handleSearchChange(e.target.value)}
+                            onClear={()=>handleSearchChange('')}
                         />
                     </div>
                     <div>

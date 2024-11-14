@@ -26,11 +26,14 @@ const SearchVariant: React.FC<SearchVariantProps> = ({
 }) => {
     const [searchTerm, setSearchTerm] = useState<string>(value);
 
-    const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleSearchChange = (event: any) => {
         const newValue = event.target.value;
+        console.log(newValue)
         setSearchTerm(newValue);
-        if (onChange) {
-            onChange(event);
+        if (event.key === 'Enter') {
+            if (onChange) {
+                onChange(event);
+            }
         }
     };
 
@@ -80,6 +83,14 @@ const SearchVariant: React.FC<SearchVariantProps> = ({
             }}
             value={searchTerm}
             onChange={handleSearchChange}
+            onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                    handleSearchChange(e);
+                }
+                else if (e.key === 'Escape') {
+                    handleClearSearch();
+                }
+            }}
             InputProps={{
                 startAdornment: (
                     showSearchButton && (
@@ -93,7 +104,7 @@ const SearchVariant: React.FC<SearchVariantProps> = ({
                 endAdornment: (
                     <InputAdornment position="end">
                         <IconButton
-                            onClick={searchTerm ? handleClearSearch : undefined}
+                            onClick={handleClearSearch}
                             aria-label={searchTerm ? 'clear search' : 'search'}
                         >
                             {searchTerm ? <ClearIcon /> : null}
