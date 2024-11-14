@@ -75,7 +75,7 @@ const FormationOverviewPage = () => {
     playerData?.filter((item: any) => item.starter === true).map((item: any) => {
       newPositionObjectMap.set(item.position, [...(newPositionObjectMap.get(item?.position) || []), item]);
     });
-    setSelectedPlayer({ ...(newPositionObjectMap?.get('goalkeeper') && newPositionObjectMap?.get('goalkeeper')[0]) || {}, index: 'goalkeeper' + 0 });
+    setSelectedPlayer({ ...(newPositionObjectMap?.get('Goalkeeper') && newPositionObjectMap?.get('Goalkeeper')[0]) || {}, index: 'Goalkeeper' + 0 });
     setPositionObjectMap(newPositionObjectMap);
   }, [playerData]);
 
