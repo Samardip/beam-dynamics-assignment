@@ -30,14 +30,14 @@ const FormationOverviewPage = () => {
   const [selectedPlayer, setSelectedPlayer] = useState<any>();
   const playerData = useSelector((state: any) => state.app.playerDetails) || [];
   const defaultPositionMap: Map<string, number> = new Map();
-  defaultPositionMap.set('GoalKeeper', 1);
-  defaultPositionMap.set('Defender', 4);
-  defaultPositionMap.set('Midfielder', 3);
-  defaultPositionMap.set('Forward', 3);
+  defaultPositionMap.set('goalkeeper', 1);
+  defaultPositionMap.set('defender', 4);
+  defaultPositionMap.set('midfielder', 3);
+  defaultPositionMap.set('forward', 3);
 
   useEffect(() => {
     let newSummaryMap = new Map<string, number>();
-    newSummaryMap.set('GoalKeeper', 0);
+    newSummaryMap.set('Goalkeeper', 0);
     newSummaryMap.set('Defender', 0);
     newSummaryMap.set('Midfielder', 0);
     newSummaryMap.set('Forward', 0);
@@ -49,9 +49,9 @@ const FormationOverviewPage = () => {
     });
     let newStarterData = { ...starterData };
     const roles = [
-      { role: "GoalKeeper", threshold: newSummaryMap.get('GoalKeeper') || 0 },
+      { role: "GoalKeeper", threshold: newSummaryMap.get('Goalkeeper') || 0 },
       { role: "Defender", threshold: newSummaryMap.get('Defender') || 0 },
-      { role: "Midfielder", threshold: newSummaryMap.get('Midfielder') || 0 },
+      { role: "MidFielder", threshold: newSummaryMap.get('Midfielder') || 0 },
       { role: "Forward", threshold: newSummaryMap.get('Forward') || 0 },
     ];
     roles.forEach(({ role, threshold }) => {
@@ -74,7 +74,7 @@ const FormationOverviewPage = () => {
     playerData?.filter((item: any) => item.starter === true).map((item: any) => {
       newPositionObjectMap.set(item.position, [...(newPositionObjectMap.get(item?.position) || []), item]);
     });
-    setSelectedPlayer({ ...(newPositionObjectMap?.get('GoalKeeper') && newPositionObjectMap?.get('GoalKeeper')[0]) || {}, index: 'GoalKeeper' + 0 });
+    setSelectedPlayer({ ...(newPositionObjectMap?.get('Goalkeeper') && newPositionObjectMap?.get('Goalkeeper')[0]) || {}, index: 'Goalkeeper' + 0 });
     setPositionObjectMap(newPositionObjectMap);
   }, [playerData]);
 
@@ -158,7 +158,7 @@ const FormationOverviewPage = () => {
 
     const items: any = [];
     positionMap.forEach((position, name) => {
-      ((defaultPositionMap.get(name)) !== position) &&
+      ((defaultPositionMap.get(name.toLowerCase())) !== position) &&
         items.push(
           <div className='flex flex-col gap-2'>
             <div className='grid grid-cols-3  py-4 font-semibold bg-custom-neutral-dark rounded-[8px] text-custom-text-2'>
@@ -166,7 +166,7 @@ const FormationOverviewPage = () => {
                 {name}
               </div>
               <div className='text-center'>
-                {defaultPositionMap.get(name)}
+                {defaultPositionMap.get(name.toLowerCase())}
               </div>
               <div className='text-center text-custom-primary-1'>
                 {position}

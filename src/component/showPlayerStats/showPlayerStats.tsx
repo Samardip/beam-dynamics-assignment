@@ -8,7 +8,7 @@ export const ShowPlayerStats = ({ selectedPlayer }: any) => {
                 {/* {isImageLoaded ? ( */}
                 <img
                     className='min-h-[300px] h-[75%] w-[65%] opacity-[0.7] object-contain'
-                    src={selectedPlayer?.position==='GoalKeeper'?'../assests/test-player-2.png':'test-player.png'}
+                    src={selectedPlayer?.position==='Goalkeeper'?'../assests/test-player-2.png':'../assests/test-player.png'}
                     alt="player"
                 />
                 {/* ) : (
