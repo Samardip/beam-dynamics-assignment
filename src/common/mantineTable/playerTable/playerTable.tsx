@@ -62,7 +62,8 @@ const PlayerTable = () => {
     setOpenPopupRow(rowId);
   }, [openPopupRow]);
   const playerData = useSelector((state: any) => state.app.playerDetails) || [];
-  const defaultPlayerDetails = useSelector((state: any) => state.app.defaultPlayerDetails) || [];
+  const defaultPlayerDetails = (useSelector((state: any) => state.app.defaultPlayerDetails) || []);
+console.log(defaultPlayerDetails);
 
   const playerTablePaginatedData = useSelector((state: any) => state.app.playerTablePaginatedData)||[];
 
@@ -138,37 +139,38 @@ const PlayerTable = () => {
         </div>
       ),
       size: 300,
-      enableSorting: false,
+      enableSorting: true,
+      sortDescFirst:false,
     },
     {
-      accessorKey: 'jerseyNumber', header: 'Jersey Number', enableSorting: false,
+      accessorKey: 'jerseyNumber', header: 'Jersey Number', enableSorting: true,
       size: 10
     },
     {
       accessorKey: 'starter',
       header: 'Starter',
       Cell: ({ cell }) => (cell.getValue() ? 'Yes' : 'No'),
-      enableSorting: false,
+      enableSorting: true,
       size: 10
     },
     {
-      accessorKey: 'position', header: 'Position', enableSorting: false,
+      accessorKey: 'position', header: 'Position', enableSorting: true,
       size: 10
     },
     {
-      accessorKey: 'height', header: 'Height', enableSorting: false,
+      accessorKey: 'height', header: 'Height', enableSorting: true,
       size: 10
     },
     {
-      accessorKey: 'weight', header: 'Weight', enableSorting: false,
+      accessorKey: 'weight', header: 'Weight', enableSorting: true,
       size: 10
     },
     {
-      accessorKey: 'nationality', header: 'Nationality', enableSorting: false,
+      accessorKey: 'nationality', header: 'Nationality', enableSorting: true,
       size: 10
     },
     {
-      accessorKey: 'appearances', header: 'Appearances', enableSorting: false,
+      accessorKey: 'appearances', header: 'Appearances', enableSorting: true,
       size: 10
     },
     {
@@ -205,6 +207,10 @@ const PlayerTable = () => {
     manualPagination:true,
     onPaginationChange: setPagination,
     // onSortingChange: setSorting,
+    enableSorting:true,
+    initialState:{
+      sorting: [{ id: 'playerName', desc: false }],
+    },
     state: {
       pagination,
     },
