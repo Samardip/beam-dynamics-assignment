@@ -143,7 +143,7 @@ const RoasterTable = () => {
                     : async () => {
                         console.log("Row clicked:", row.original);
                         dispatch(appActions.updateFileDetails(row.original));
-                        await fetch(`http://localhost:5001/api/roster/${row.original.id}`, {
+                        await fetch(`${process.env.REACT_APP_API_ENDPOINT}/roster/${row.original.id}`, {
                             method: "get",
                         })
                             .then((res) => res.json())

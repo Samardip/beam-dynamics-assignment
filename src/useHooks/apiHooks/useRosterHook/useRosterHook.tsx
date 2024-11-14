@@ -8,7 +8,7 @@ export const useRosterHook = () => {
     const roasterData = useSelector((state: any) => state.app.roasterDetails) || [];
     const fetchRoasterData = useCallback(async() => {
         setLoading(true);
-        await fetch('http://localhost:5001/api/file', {
+        await fetch(`${process.env.REACT_APP_API_ENDPOINT}/file`, {
             method: "get",
         })
             .then((res) => res.json())
@@ -43,7 +43,7 @@ export const useRosterHook = () => {
     },[roasterData])
     const deleteRoasterData = async (id: string) => {
         setLoading(true);
-        await fetch(`http://localhost:5001/api/file/${id}`, {
+        await fetch(`${process.env.REACT_APP_API_ENDPOINT}/file/${id}`, {
             method: "delete",
         })
             .then((res) => res.json())

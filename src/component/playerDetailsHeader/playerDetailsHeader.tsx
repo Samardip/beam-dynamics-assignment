@@ -37,7 +37,7 @@ export const PlayerDetailsHeader = ({ isRoasterSelected }: {
             fileName: teamName,
             fileId: fileData?.id || id || ''
         }
-        await fetch('http://localhost:5001/api/file', {
+        await fetch(`${process.env.REACT_APP_API_ENDPOINT}/file`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',

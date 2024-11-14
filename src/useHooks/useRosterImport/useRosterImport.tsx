@@ -24,7 +24,7 @@ export const useRosterImport = ({ setModalOpen }: {
 
     const handleImportClicked = useCallback(async () => {
         setDataLoading(true);
-        await fetch('http://localhost:5001/api/file', {
+        await fetch(`${process.env.REACT_APP_API_ENDPOINT}/file`, {
             method: "POST",
             body: formData, // FormData already contains the file
         })

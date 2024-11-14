@@ -283,7 +283,7 @@ const PlayerTable = () => {
     }),
   });
   const handleChangeEditData = async (data: any) => {
-    await fetch('http://localhost:5001/api/roster', {
+    await fetch(`${process.env.REACT_APP_API_ENDPOINT}/roster`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -307,7 +307,7 @@ const PlayerTable = () => {
           if (data.id === item.id) {
             return {
               ...data,
-              starter:data.starter?'Yes':'No'
+              starter:data.starter==='no'?false:true
             }
           } else {
             return item;
@@ -331,7 +331,7 @@ const PlayerTable = () => {
     dispatch(appActions.updatePlayerDetails(newPlayerData));
         dispatch(appActions.updateDefaultPlayerDetails(newPlayerData));
 
-    await fetch(`http://localhost:5001/api/roster/${openPopupRow}`, {
+    await fetch(`${process.env.REACT_APP_API_ENDPOINT}/roster/${openPopupRow}`, {
       method: "delete",
     })
       .then((res) => res.json())
