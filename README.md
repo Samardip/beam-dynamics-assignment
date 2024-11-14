@@ -1,6 +1,8 @@
 Football Manager Project
 Deployed link:https://beam-dynamics-assignment.vercel.app/
 
+Go to .env file and change api route as per your choice.
+
 Getting Started
 To get started with this project, clone the repository and install the required dependencies.
 
