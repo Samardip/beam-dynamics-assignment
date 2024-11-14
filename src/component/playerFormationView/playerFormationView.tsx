@@ -34,9 +34,9 @@ export const PlayerFormationView = ({ positionObjectMap,formationData, setSelect
                                     setSelectedPlayer({...player,index:position+index});
                                  }}
                             >
-                                {player.jerseyNumber}
+                                {player?.jerseyNumber}
                             </div>
-                            <div className='text-custom-text-1 font-semibold'>{player.playerName}</div>
+                            <div className='text-custom-text-1 font-semibold'>{player?.playerName}</div>
                         </div>
                     );
                 });

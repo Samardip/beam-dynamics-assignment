@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { PlayerDetailsHeader } from '../../component/playerDetailsHeader/playerDetailsHeader';
 import ModalVariant from '../../common/modalVariant/modalVariant';
 import { PlayerFormationView } from '../../component/playerFormationView/playerFormationView';
 import { ShowPlayerStats } from '../../component/showPlayerStats/showPlayerStats';
 import { useSelector } from 'react-redux';
-import { NoFormationData } from '../../component/noFormationData/noFormationData';
 
 interface Player {
   id: string;
@@ -37,29 +36,31 @@ const FormationOverviewPage = () => {
 
   useEffect(() => {
     let newSummaryMap = new Map<string, number>();
-    newSummaryMap.set('Goalkeeper', 0);
-    newSummaryMap.set('Defender', 0);
-    newSummaryMap.set('Midfielder', 0);
-    newSummaryMap.set('Forward', 0);
+    newSummaryMap.set('goalkeeper', 0);
+    newSummaryMap.set('defender', 0);
+    newSummaryMap.set('midfielder', 0);
+    newSummaryMap.set('forward', 0);
     playerData.forEach((item: any) => {
-      const position = item?.position;
+      const position = item?.position?.toLowerCase();
       if (position && item.starter) {
         newSummaryMap.set(position, (newSummaryMap.get(position) || 0) + 1);
       }
     });
     let newStarterData = { ...starterData };
     const roles = [
-      { role: "GoalKeeper", threshold: newSummaryMap.get('Goalkeeper') || 0 },
-      { role: "Defender", threshold: newSummaryMap.get('Defender') || 0 },
-      { role: "MidFielder", threshold: newSummaryMap.get('Midfielder') || 0 },
-      { role: "Forward", threshold: newSummaryMap.get('Forward') || 0 },
+      { role: "goalkeeper", threshold: newSummaryMap.get('goalkeeper') },
+      { role: "defender", threshold: newSummaryMap.get('defender') },
+      { role: "midfielder", threshold: newSummaryMap.get('midfielder') },
+      { role: "forward", threshold: newSummaryMap.get('forward') },
     ];
     roles.forEach(({ role, threshold }) => {
       const count = defaultPositionMap.get(role) || 0;
-      if (count > threshold) {
-        newStarterData.lowStarter = newStarterData.lowStarter - 1;
-      } else if (count < threshold) {
-        newStarterData.moreStarter = newStarterData.moreStarter + 1;
+      if (threshold) {
+        if (count > threshold) {
+          newStarterData.lowStarter = newStarterData.lowStarter - 1;
+        } else if (count < threshold) {
+          newStarterData.moreStarter = newStarterData.moreStarter + 1;
+        }
       }
     });
 
@@ -74,7 +75,7 @@ const FormationOverviewPage = () => {
     playerData?.filter((item: any) => item.starter === true).map((item: any) => {
       newPositionObjectMap.set(item.position, [...(newPositionObjectMap.get(item?.position) || []), item]);
     });
-    setSelectedPlayer({ ...(newPositionObjectMap?.get('Goalkeeper') && newPositionObjectMap?.get('Goalkeeper')[0]) || {}, index: 'Goalkeeper' + 0 });
+    setSelectedPlayer({ ...(newPositionObjectMap?.get('goalkeeper') && newPositionObjectMap?.get('goalkeeper')[0]) || {}, index: 'goalkeeper' + 0 });
     setPositionObjectMap(newPositionObjectMap);
   }, [playerData]);
 
@@ -154,9 +155,10 @@ const FormationOverviewPage = () => {
     });
     setFormationData(updatedFormationData);
   }, [selectedPlayer])
-  const renderItems = () => {
+  const renderItems = useCallback(() => {
 
     const items: any = [];
+
     positionMap.forEach((position, name) => {
       ((defaultPositionMap.get(name.toLowerCase())) !== position) &&
         items.push(
@@ -175,8 +177,23 @@ const FormationOverviewPage = () => {
           </div>
         );
     });
+    if (items.size === 0) {
+      setStarterData({
+        lowStarter: 0,
+        moreStarter: 0
+      })
+    }
+    console.log(starterData)
     return items;
-  };
+  }, [positionMap, starterData]);
+  // useEffect(()=>{
+  //   if(positionMap.size ===0){
+  //     setStarterData({
+  //       lowStarter: 0,
+  //       moreStarter: 0
+  //     })
+  //   }
+  // },[positionMap])
   return (
     <div>
       <PlayerDetailsHeader isRoasterSelected={false} />
