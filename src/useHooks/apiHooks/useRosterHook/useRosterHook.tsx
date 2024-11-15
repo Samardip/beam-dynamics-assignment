@@ -57,6 +57,6 @@ export const useRosterHook = () => {
     }
    
     return {
-        fetchRoasterData,deleteRoasterData, loading
+        fetchRoasterData,deleteRoasterData, loading,setLoading
     }
 }

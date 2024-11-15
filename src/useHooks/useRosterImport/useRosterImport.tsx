@@ -18,7 +18,6 @@ export const useRosterImport = ({ setModalOpen }: {
     const roasterData = useSelector((state: any) => state.app.roasterDetails) || [];
 
     const navigate = useNavigate();
-    const dispatch = useDispatch();
 
     const { fetchRoasterData, loading } = useRosterHook();
 
@@ -31,7 +30,7 @@ export const useRosterImport = ({ setModalOpen }: {
             .then((res) => res.json())
             .then(async (res) => {
                 console.log(res);
-                setModalOpen(false);
+                // setModalOpen(false);
                 await fetchRoasterData();
                 setFileData([]);
                 setSelectedFile(null)
@@ -46,7 +45,7 @@ export const useRosterImport = ({ setModalOpen }: {
             }).finally(() => {
                 setDataLoading(false);
             });
-    }, [formData,roasterData])
+    }, [])
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {

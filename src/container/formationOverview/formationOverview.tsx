@@ -12,10 +12,10 @@ interface Player {
 }
 
 type FormationData = {
-  Goalkeeper: Player[];
-  Defender: Player[];
-  Midfielder: Player[];
-  Forward: Player[];
+  goalkeeper: Player[];
+  defender: Player[];
+  midfielder: Player[];
+  forward: Player[];
 };
 
 const FormationOverviewPage = () => {
@@ -28,6 +28,7 @@ const FormationOverviewPage = () => {
   });
   const [selectedPlayer, setSelectedPlayer] = useState<any>();
   const playerData = useSelector((state: any) => state.app.playerDetails) || [];
+  const defaultPlayerDetails = useSelector((state: any) => state.app.defaultPlayerDetails) || [];
   const defaultPositionMap: Map<string, number> = new Map();
   defaultPositionMap.set('goalkeeper', 1);
   defaultPositionMap.set('defender', 4);
@@ -40,52 +41,59 @@ const FormationOverviewPage = () => {
     newSummaryMap.set('defender', 0);
     newSummaryMap.set('midfielder', 0);
     newSummaryMap.set('forward', 0);
-    playerData.forEach((item: any) => {
+    defaultPlayerDetails.forEach((item: any) => {
       const position = item?.position?.toLowerCase();
       if (position && item.starter) {
         newSummaryMap.set(position, (newSummaryMap.get(position) || 0) + 1);
       }
     });
-    let newStarterData = { ...starterData };
+      let lowStarter= 0;
+      let moreStarter= 0;
+    console.log(defaultPlayerDetails,newSummaryMap)
     const roles = [
-      { role: "goalkeeper", threshold: newSummaryMap.get('goalkeeper') },
-      { role: "defender", threshold: newSummaryMap.get('defender') },
-      { role: "midfielder", threshold: newSummaryMap.get('midfielder') },
-      { role: "forward", threshold: newSummaryMap.get('forward') },
+      { role: "goalkeeper", threshold: newSummaryMap.get('goalkeeper')||0 },
+      { role: "defender", threshold: newSummaryMap.get('defender')||0 },
+      { role: "midfielder", threshold: newSummaryMap.get('midfielder')||0 },
+      { role: "forward", threshold: newSummaryMap.get('forward')||0 },
     ];
     roles.forEach(({ role, threshold }) => {
-      const count = defaultPositionMap.get(role) || 0;
-      if (threshold) {
+      const count = defaultPositionMap.get(role)||0;
+      console.log(threshold,count)
+      if (threshold!==undefined) {
         if (count > threshold) {
-          newStarterData.lowStarter = newStarterData.lowStarter - 1;
+          lowStarter = lowStarter - 1;
         } else if (count < threshold) {
-          newStarterData.moreStarter = newStarterData.moreStarter + 1;
+          moreStarter = moreStarter - 1;
         }
       }
     });
-
-    setStarterData(newStarterData);
+console.log(lowStarter,moreStarter)
+    setStarterData({
+      lowStarter:lowStarter,
+      moreStarter:moreStarter
+    });
     setPositionMap(newSummaryMap);
-  }, [playerData]);
+  }, [defaultPlayerDetails]);
 
   const [positionObjectMap, setPositionObjectMap] = useState<Map<string, any>>(new Map());
 
   useEffect(() => {
     const newPositionObjectMap: Map<string, any> = new Map();
-    playerData?.filter((item: any) => item.starter === true).map((item: any) => {
-      newPositionObjectMap.set(item.position, [...(newPositionObjectMap.get(item?.position) || []), item]);
+    defaultPlayerDetails?.filter((item: any) => item.starter === true)?.map((item: any) => {
+      newPositionObjectMap.set(item?.position.toLowerCase(), [...(newPositionObjectMap.get(item?.position.toLowerCase()) || []), item]);
     });
-    setSelectedPlayer({ ...(newPositionObjectMap?.get('Goalkeeper') && newPositionObjectMap?.get('Goalkeeper')[0]) || {}, index: 'Goalkeeper' + 0 });
+    console.log(newPositionObjectMap);
+    setSelectedPlayer({ ...(newPositionObjectMap?.get('goalkeeper') && newPositionObjectMap?.get('goalkeeper')[0]) || [], index: 'goalkeeper' + 0 });
     setPositionObjectMap(newPositionObjectMap);
-  }, [playerData]);
+  }, [defaultPlayerDetails]);
 
   const [formationData, setFormationData] = useState<FormationData>({
-    "Goalkeeper": [{
+    "goalkeeper": [{
       id: '0',
       selected: true,
       className: 'left-[23px] bottom-[42%]',
     }],
-    "Defender": [{
+    "defender": [{
       id: '1',
       selected: false,
       className: 'left-[24%] bottom-[80%]',
@@ -105,7 +113,7 @@ const FormationOverviewPage = () => {
       selected: false,
       className: 'left-[23%] bottom-[6%]',
     }],
-    "Midfielder": [{
+    "midfielder": [{
 
       id: '5',
       selected: false,
@@ -123,7 +131,7 @@ const FormationOverviewPage = () => {
       selected: false,
       className: 'left-[45%] bottom-[75%]',
     }],
-    "Forward": [{
+    "forward": [{
 
       id: '8',
       selected: false,
@@ -158,7 +166,6 @@ const FormationOverviewPage = () => {
   const renderItems = useCallback(() => {
 
     const items: any = [];
-
     positionMap.forEach((position, name) => {
       ((defaultPositionMap.get(name.toLowerCase())) !== position) &&
         items.push(
@@ -185,15 +192,8 @@ const FormationOverviewPage = () => {
     }
     console.log(starterData)
     return items;
-  }, [positionMap, starterData]);
-  // useEffect(()=>{
-  //   if(positionMap.size ===0){
-  //     setStarterData({
-  //       lowStarter: 0,
-  //       moreStarter: 0
-  //     })
-  //   }
-  // },[positionMap])
+  }, [ positionMap, starterData]);
+
   return (
     <div>
       <PlayerDetailsHeader isRoasterSelected={false} />

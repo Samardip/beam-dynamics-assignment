@@ -37,8 +37,7 @@ const RoasterTable = () => {
         setOpenPopupRow(rowIndex);
     };
     const navigate = useNavigate();
-    const { fetchRoasterData, loading, deleteRoasterData } = useRosterHook();
-    console.log(loading, 'loading');
+    const { fetchRoasterData, loading,setLoading, deleteRoasterData } = useRosterHook();
     const columns = useMemo<MRT_ColumnDef<Player>[]>(() => [
         {
             accessorKey: 'rosterName',
@@ -149,7 +148,7 @@ const RoasterTable = () => {
                             .then((res) => res.json())
                             .then(async (res) => {
                                 const newData = res[0]?.players?.map((item: any) => ({
-                                    ...item,
+                                ...item,
                                     visibility: true,
                                 }));
                                 dispatch(appActions.updatePlayerDetails(newData));
@@ -203,6 +202,7 @@ const RoasterTable = () => {
     }, [])
     const handleDeleteFile = async () => {
         let newRoasterData = [];
+        setLoading(true);
         newRoasterData = defaultRoasterDetails.filter((item: any, index: number) => {
             return (openPopupRow !== item.id);
         })
@@ -210,6 +210,7 @@ const RoasterTable = () => {
         dispatch(appActions.updateDefaultRoasterDetails(newRoasterData));
         await deleteRoasterData(openPopupRow);
         setIsEditModalOpen(false);
+        setLoading(false);
     }
     return (
         <>
@@ -229,6 +230,7 @@ const RoasterTable = () => {
                 handleChange={handleDeleteFile}
                 id={openPopupRow}
                 data={roasterData}
+                loading={loading}
             />
         </>
     );
