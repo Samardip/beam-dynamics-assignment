@@ -48,7 +48,7 @@ const ModalVariant: React.FC<ModalVariantProps> = ({
                     minWidth: width || '700px',
                     minHeight: height || '500px',
                     background: 'rgba(45, 45, 45, 1)',
-                    position: 'relative', // Ensure absolute positioning inside content works
+                    position: 'relative',
                     zIndex:1,
                     ...customStyles?.content,
                 },

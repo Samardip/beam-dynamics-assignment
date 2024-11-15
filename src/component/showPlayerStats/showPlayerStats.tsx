@@ -20,7 +20,7 @@ export const ShowPlayerStats = ({ selectedPlayer }: any) => {
                 )} */}
                         <div className='absolute top-0 left-[12px] font-bold text-[50px] text-custom-primary-1'>{selectedPlayer?.jerseyNumber}</div>
                         <div className='absolute top-[-80px] left-[-2px] opacity-20 font-bold text-[140px] text-custom-text-4'>{selectedPlayer?.jerseyNumber}</div>
-                        {/* <div className="absolute bottom-[139px] left-0 right-0 h-[2%] w-[100%] bg-gradient-to-t from-custom-neutral-dark via-custom-neutral-dark to-transparent"></div> */}
+                        <div className="absolute bottom-[139px] left-0 right-0 h-[4%] w-[100%] bg-gradient-to-t from-custom-neutral-dark via-custom-neutral-dark to-transparent"></div>
                         <div className='flex justify-start w-[100%] gap-14'>
                             <div className='flex flex-col items-start justify-start gap-2'>
                                 <div className='text-custom-text-2'>

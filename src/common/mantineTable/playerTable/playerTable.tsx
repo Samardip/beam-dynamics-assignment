@@ -45,6 +45,7 @@ const PlayerTable = () => {
   const [isActionModalOpen, setIsActionModalOpen] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditOpenModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
     pageSize: 20,
@@ -289,6 +290,7 @@ console.log(defaultPlayerDetails);
     }),
   });
   const handleChangeEditData = async (data: any) => {
+    setLoading(true);
     await fetch(`${process.env.REACT_APP_API_ENDPOINT}/roster`, {
       method: 'PATCH',
       headers: {
@@ -326,10 +328,12 @@ console.log(defaultPlayerDetails);
       setIsEditOpenModal(false);
     }).catch((err) => {
       setErrorMessage(err.message)
+    }).finally(()=>{
+      setLoading(false);
     })
   }
   const deleteRoasterData = async () => {
-    // setLoading(true);
+    setLoading(true);
     let newPlayerData = [];
     newPlayerData = defaultPlayerDetails.filter((item: any) => {
       return item.id !== openPopupRow;
@@ -347,7 +351,7 @@ console.log(defaultPlayerDetails);
       }).catch((err) => {
 
       }).finally(() => {
-        // setLoading(false);
+        setLoading(false);
 
       })
   }
@@ -403,6 +407,7 @@ console.log(defaultPlayerDetails);
         setIsModalOpen={setIsDeleteModalOpen}
         id={openPopupRow}
         data={playerData}
+        loading={loading}
         handleChange={() => { deleteRoasterData() }}
       />
       <EditPlayerDataModal
@@ -411,6 +416,7 @@ console.log(defaultPlayerDetails);
         data={(playerData.filter((item: any) => item.id === openPopupRow) || [{}])[0]}
         handleChange={handleChangeEditData}
         errorMessage={errorMessage}
+        loading={loading}
         setErrorMessage={setErrorMessage}
       />
     </>

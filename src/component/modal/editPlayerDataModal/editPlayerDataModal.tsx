@@ -4,6 +4,7 @@ import SearchVariant from '../../../common/searchVariant/searchVariant';
 import { ButtonVarient } from '../../../common/buttonVariant/buttonVarient';
 import RadioButtonVariant from '../../../common/radioButtonVariant/radioButtonVariant';
 import SelectDropdownVariant from '../../../common/selectDropdownVariant/selectDropdownVariant';
+import { CircularProgress } from '@mui/material';
 
 interface EditPlayerDataModalProps {
     isModalOpen: boolean;
@@ -12,6 +13,7 @@ interface EditPlayerDataModalProps {
     handleChange: (updatedData: PlayerData) => void;
     errorMessage: string;
     setErrorMessage: any;
+    loading?: boolean;
 }
 
 interface PlayerData {
@@ -31,7 +33,8 @@ export const EditPlayerDataModal: React.FC<EditPlayerDataModalProps> = ({
     data,
     handleChange,
     errorMessage,
-    setErrorMessage
+    setErrorMessage,
+    loading
 }) => {
     const [playerData, setPlayerData] = useState<PlayerData>({
         playerName: '',
@@ -198,13 +201,16 @@ export const EditPlayerDataModal: React.FC<EditPlayerDataModalProps> = ({
                             Edit Player
                         </div>
                         :
-                        <div className="w-[100%] flex justify-end">
-                            <ButtonVarient
-                                text="Edit Player"
-                                className="!min-w-[30px]"
-                                onClick={handleEditPlayer}
-                            />
-                        </div>
+
+                        loading ? <CircularProgress />
+                            :
+                            <div className="w-[100%] flex justify-end">
+                                <ButtonVarient
+                                    text="Edit Player"
+                                    className="!min-w-[30px]"
+                                    onClick={handleEditPlayer}
+                                />
+                            </div>
                 }
             </div>
         </ModalVariant>

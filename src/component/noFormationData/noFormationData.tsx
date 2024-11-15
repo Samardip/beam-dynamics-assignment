@@ -26,7 +26,7 @@ export const NoFormationData = ({ showModal }: {
                 <ModalVariant
                     isOpen={isNoListModalOpen}
                     onRequestClose={() => {
-                        // setIsNoListModalOpen(false)
+                        setIsNoListModalOpen(false)
                     }}
                     isTitleAndClose={false}
                     isTitleBorder={false}

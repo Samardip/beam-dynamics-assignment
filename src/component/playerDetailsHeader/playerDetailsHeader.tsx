@@ -6,6 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { IconButton, TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { appActions } from '../../context/app-slice';
+import { ImportRoasterModal } from '../modal/importRosterModal/importRoasterModal';
 
 export const PlayerDetailsHeader = ({ isRoasterSelected }: {
     isRoasterSelected: boolean | null
@@ -15,10 +16,12 @@ export const PlayerDetailsHeader = ({ isRoasterSelected }: {
     const dispatch = useDispatch();
     const [isEditing, setIsEditing] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
+    const [isModalOpen, setModalOpen] = useState<boolean>(false);
 
     const fileData = useSelector((state: any) => state.app.fileDetails) || {};
     const playerData = useSelector((state: any) => state.app.playerDetails) || [];
     const defaultPlayerDetails = useSelector((state: any) => state.app.defaultPlayerDetails) || [];
+    const roasterData = useSelector((state: any) => state.app.roasterDetails) || [];
 
     const [teamName, setTeamName] = useState(fileData?.rosterName || '');
     const [searchTerm, setSearchTerm] = useState<string>('');
@@ -118,7 +121,12 @@ export const PlayerDetailsHeader = ({ isRoasterSelected }: {
                 <div className='flex justify-center items-center border-[1px] border-custom-text-4 rounded-[8px] h-[46px]'>
                     <div className={`flex gap-2 justify-center items-center cursor-pointer py-2 px-4 rounded-l-[8px] ${isRoasterSelected ? 'bg-custom-neutral-light' : ''} border-r-[1px] border-r-custom-text-4`}
                         onClick={() => {
-                            navigate(`/roaster-details/${id}`)
+                            if (roasterData?.length === 0) {
+                                setModalOpen(true);
+                            }
+                            else {
+                                navigate(`/roaster-details/${id}`)
+                            }
                         }}
                     >
                         <div><img src="../assests/roaster-icon.png" alt="logo" className='w-[100%] cursor-pointer' /></div>
@@ -134,6 +142,7 @@ export const PlayerDetailsHeader = ({ isRoasterSelected }: {
                     </div>
                 </div>
             </div>
+            <ImportRoasterModal isModalOpen={isModalOpen} setModalOpen={setModalOpen} />
         </div>
     )
 }
