@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import ModalVariant from '../../../common/modalVariant/modalVariant';
 import SearchVariant from '../../../common/searchVariant/searchVariant';
 import { ButtonVarient } from '../../../common/buttonVariant/buttonVarient';
@@ -11,7 +11,7 @@ interface EditPlayerDataModalProps {
     data: PlayerData;
     handleChange: (updatedData: PlayerData) => void;
     errorMessage: string;
-    setErrorMessage:any;
+    setErrorMessage: any;
 }
 
 interface PlayerData {
@@ -82,17 +82,18 @@ export const EditPlayerDataModal: React.FC<EditPlayerDataModalProps> = ({
         }
     }, [data]);
 
-    const handleInputChange = (field: keyof PlayerData, value: string) => {
+    const handleInputChange = useCallback((field: keyof PlayerData, value: string) => {
+        setIsDataModified(true);
         setPlayerData((prevData) => ({
             ...prevData,
             [field]: value,
         }));
-        setIsDataModified(true);
-    };
+    }, [playerData]);
 
     const handleEditPlayer = () => {
         setErrorMessage('');
         handleChange(playerData);
+        setIsDataModified(false);
     };
 
     return (
@@ -110,6 +111,7 @@ export const EditPlayerDataModal: React.FC<EditPlayerDataModalProps> = ({
                     <div className="flex flex-col w-[60%] gap-2">
                         <div>Player Name</div>
                         <SearchVariant
+                            event="any"
                             placeholder="Enter Player Name"
                             showSearchButton={false}
                             className="bg-custom-neutral-light !w-[100%]"
@@ -120,6 +122,7 @@ export const EditPlayerDataModal: React.FC<EditPlayerDataModalProps> = ({
                     <div className="flex flex-col w-[40%] gap-2">
                         <div>Jersey Number</div>
                         <SearchVariant
+                            event="any"
                             placeholder="Enter Jersey Number"
                             showSearchButton={false}
                             className="bg-custom-neutral-light !w-[100%]"
@@ -132,6 +135,7 @@ export const EditPlayerDataModal: React.FC<EditPlayerDataModalProps> = ({
                     <div className="flex flex-col w-[45%] gap-2">
                         <div>Height</div>
                         <SearchVariant
+                            event="any"
                             placeholder="Enter Height"
                             showSearchButton={false}
                             className="bg-custom-neutral-light !w-[100%]"
@@ -142,6 +146,7 @@ export const EditPlayerDataModal: React.FC<EditPlayerDataModalProps> = ({
                     <div className="flex flex-col w-[55%] gap-2">
                         <div>Weight</div>
                         <SearchVariant
+                            event="any"
                             placeholder="Enter Weight"
                             showSearchButton={false}
                             className="bg-custom-neutral-light !w-[100%]"

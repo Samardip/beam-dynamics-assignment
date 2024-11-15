@@ -12,6 +12,7 @@ interface SearchVariantProps {
     onClear?: () => void;
     onSearch?: (term: string) => void;
     iconColor?: string;
+    event?:string;
 }
 
 const SearchVariant: React.FC<SearchVariantProps> = ({
@@ -22,17 +23,18 @@ const SearchVariant: React.FC<SearchVariantProps> = ({
     onChange,
     onClear,
     onSearch,
+    event,
     iconColor = 'rgba(153, 153, 153, 1)'
 }) => {
     const [searchTerm, setSearchTerm] = useState<string>(value);
 
-    const handleSearchChange = (event: any) => {
-        const newValue = event.target.value;
+    const handleSearchChange = (e: any) => {
+        const newValue = e.target.value;
         console.log(newValue)
         setSearchTerm(newValue);
-        if (event.key === 'Enter') {
+        if (e.key === 'Enter' || event==='any') {
             if (onChange) {
-                onChange(event);
+                onChange(e);
             }
         }
     };
@@ -82,7 +84,7 @@ const SearchVariant: React.FC<SearchVariantProps> = ({
                 },
             }}
             value={searchTerm}
-            onChange={handleSearchChange}
+            onChange={(e)=>{handleSearchChange(e)}}
             onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                     handleSearchChange(e);
