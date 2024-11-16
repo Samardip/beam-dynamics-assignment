@@ -2,8 +2,7 @@ import React, { useCallback, useState } from 'react'
 import Papa from 'papaparse';
 import { useNavigate } from 'react-router-dom';
 import { useRosterHook } from '../apiHooks/useRosterHook/useRosterHook';
-import { appActions } from '../../context/app-slice';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 export const useRosterImport = ({ setModalOpen }: {
     setModalOpen: any
@@ -23,6 +22,7 @@ export const useRosterImport = ({ setModalOpen }: {
 
     const handleImportClicked = useCallback(async () => {
         setDataLoading(true);
+        try{
         await fetch(`${process.env.REACT_APP_API_ENDPOINT}/file`, {
             method: "POST",
             body: formData, // FormData already contains the file
@@ -45,6 +45,10 @@ export const useRosterImport = ({ setModalOpen }: {
             }).finally(() => {
                 setDataLoading(false);
             });
+        }
+        catch{
+            
+        }
     }, [formData])
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];

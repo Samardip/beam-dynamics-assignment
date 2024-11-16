@@ -6,7 +6,7 @@ export const useRosterHook = () => {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState<boolean>(false);
     const roasterData = useSelector((state: any) => state.app.roasterDetails) || [];
-    const fetchRoasterData = useCallback(async() => {
+    const fetchRoasterData = useCallback(async () => {
         setLoading(true);
         await fetch(`${process.env.REACT_APP_API_ENDPOINT}/file`, {
             method: "get",
@@ -18,7 +18,7 @@ export const useRosterHook = () => {
                 let newData = [];
                 newData = res?.map((item: any) => {
                     let date = new Date(item.createdAt);
-                    console.log(date.toLocaleString(),item.createdAt)
+                    console.log(date.toLocaleString(), item.createdAt)
                     let newObj = {
                         id: item.id,
                         rosterName: item.fileName,
@@ -40,23 +40,28 @@ export const useRosterHook = () => {
             }).finally(() => {
                 setLoading(false);
             })
-    },[roasterData])
+    }, [roasterData])
     const deleteRoasterData = async (id: string) => {
         setLoading(true);
-        await fetch(`${process.env.REACT_APP_API_ENDPOINT}/file/${id}`, {
-            method: "delete",
-        })
-            .then((res) => res.json())
-            .then(async (res) => {
-                
-            }).catch((err) => {
-
-            }).finally(() => {
-                setLoading(false);
+        try {
+            await fetch(`${process.env.REACT_APP_API_ENDPOINT}/file/${id}`, {
+                method: "delete",
             })
+                .then((res) => res.json())
+                .then(async (res) => {
+
+                }).catch((err) => {
+
+                }).finally(() => {
+                    setLoading(false);
+                })
+        }
+        catch {
+
+        }
     }
-   
+
     return {
-        fetchRoasterData,deleteRoasterData, loading,setLoading
+        fetchRoasterData, deleteRoasterData, loading, setLoading
     }
 }

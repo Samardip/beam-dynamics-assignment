@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { appActions } from '../../context/app-slice';
 
-export const ImportRoaster = () => {
+export const ImportRoasterHeader = () => {
     const [isModalOpen, setModalOpen] = useState<boolean>(false);
     const [searchTerm, setSearchTerm] = useState<string>('');
 
