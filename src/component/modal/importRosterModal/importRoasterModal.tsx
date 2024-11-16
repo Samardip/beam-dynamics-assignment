@@ -8,12 +8,15 @@ export const ImportRoasterModal = ({ isModalOpen, setModalOpen }: {
     isModalOpen: boolean,
     setModalOpen: any
 }) => {
-    const { selectedFile, handleFileChange, isValidCSV, fileData, summaryMap, showErrorOnce, handleImportClicked,dataLoading } = useRosterImport({ setModalOpen });
+    const { selectedFile, handleFileChange, isValidCSV, fileData, summaryMap, showErrorOnce, handleImportClicked, dataLoading, errorMessage, setErrorMessage } = useRosterImport({ setModalOpen });
 
     return (
         <ModalVariant
             isOpen={isModalOpen}
-            onRequestClose={() => { setModalOpen(false) }}
+            onRequestClose={() => {
+                setModalOpen(false);
+                setErrorMessage('');
+            }}
             title="Importer"
             isTitleAndClose={true}
             isTitleBorder={true}
@@ -51,6 +54,11 @@ export const ImportRoasterModal = ({ isModalOpen, setModalOpen }: {
                             ))}
                         </div>
                     </div>
+                    {
+                        errorMessage && <div className=" absolute bottom-20 right-4 w-[100%] flex justify-end pt-[20px] text-red-600">
+                            {errorMessage}
+                        </div>
+                    }
                     <div className="absolute bottom-4 right-4" onClick={() => { handleImportClicked() }}>
                         {
                             dataLoading ?

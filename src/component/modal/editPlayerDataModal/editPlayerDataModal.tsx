@@ -87,6 +87,7 @@ export const EditPlayerDataModal: React.FC<EditPlayerDataModalProps> = ({
 
     const handleInputChange = useCallback((field: keyof PlayerData, value: string) => {
         setIsDataModified(true);
+        setErrorMessage('');
         setPlayerData((prevData) => ({
             ...prevData,
             [field]: value,
@@ -102,7 +103,10 @@ export const EditPlayerDataModal: React.FC<EditPlayerDataModalProps> = ({
     return (
         <ModalVariant
             isOpen={isModalOpen}
-            onRequestClose={() => setIsModalOpen(false)}
+            onRequestClose={() => {
+                setIsModalOpen(false)
+                setErrorMessage('');
+            }}
             title="Edit Player"
             isTitleAndClose={true}
             isTitleBorder={false}

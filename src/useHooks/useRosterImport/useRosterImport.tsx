@@ -14,6 +14,8 @@ export const useRosterImport = ({ setModalOpen }: {
     const [summaryMap, setSummaryMap] = useState<Map<string, number>>(new Map()); // Map to hold position counts
     const [formData, setFormData] = useState<FormData | null>();
     const [dataLoading, setDataLoading] = useState<boolean>(false);
+    const [errorMessage, setErrorMessage] = useState<string>('');
+
     const roasterData = useSelector((state: any) => state.app.roasterDetails) || [];
 
     const navigate = useNavigate();
@@ -22,35 +24,42 @@ export const useRosterImport = ({ setModalOpen }: {
 
     const handleImportClicked = useCallback(async () => {
         setDataLoading(true);
-        try{
-        await fetch(`${process.env.REACT_APP_API_ENDPOINT}/file`, {
-            method: "POST",
-            body: formData, // FormData already contains the file
-        })
-            .then((res) => res.json())
-            .then(async (res) => {
-                console.log(res);
-                setModalOpen(false);
-                await fetchRoasterData();
-                setFileData([]);
-                setSelectedFile(null)
-                setSummaryMap(new Map());
-                setIsValidCSV(null);
-                setShowErrorOnce(null);
-                navigate('/');
-                console.log('roaster imported updated successfully')
+        try {
+            await fetch(`${process.env.REACT_APP_API_ENDPOINT}/file`, {
+                method: "POST",
+                body: formData, // FormData already contains the file
             })
-            .catch((err) => {
-                console.error("Error:", err);
-            }).finally(() => {
-                setDataLoading(false);
-            });
+                .then((res) => {
+                    if (!res.ok) {
+                        throw new Error(`Failed to update player. Status: ${res.status}`);
+                    }
+                    res.json()
+                })
+                .then(async (res) => {
+                    console.log(res);
+                    setModalOpen(false);
+                    await fetchRoasterData();
+                    setFileData([]);
+                    setSelectedFile(null)
+                    setSummaryMap(new Map());
+                    setIsValidCSV(null);
+                    setShowErrorOnce(null);
+                    navigate('/');
+                    console.log('roaster imported updated successfully');
+                })
+                .catch((err) => {
+                    console.error("Error:", err);
+                    setErrorMessage('Some required .csv fields may be missing or file is already uploaded!!')
+                }).finally(() => {
+                    setDataLoading(false);
+                });
         }
-        catch{
-            
+        catch {
+
         }
     }, [formData])
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        setErrorMessage('');
         const file = event.target.files?.[0];
         if (file) {
             console.log(file)
@@ -95,6 +104,6 @@ export const useRosterImport = ({ setModalOpen }: {
         );
     };
     return {
-        selectedFile, handleFileChange, isValidCSV, fileData, summaryMap, showErrorOnce, handleImportClicked, loading, dataLoading
+        selectedFile, handleFileChange, isValidCSV, fileData, summaryMap, showErrorOnce, handleImportClicked, loading, dataLoading,errorMessage,setErrorMessage
     }
 }

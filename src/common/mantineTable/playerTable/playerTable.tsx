@@ -64,9 +64,9 @@ const PlayerTable = () => {
   }, [openPopupRow]);
   const playerData = useSelector((state: any) => state.app.playerDetails) || [];
   const defaultPlayerDetails = (useSelector((state: any) => state.app.defaultPlayerDetails) || []);
-console.log(defaultPlayerDetails);
+  console.log(defaultPlayerDetails);
 
-  const playerTablePaginatedData = useSelector((state: any) => state.app.playerTablePaginatedData)||[];
+  const playerTablePaginatedData = useSelector((state: any) => state.app.playerTablePaginatedData) || [];
 
   const RederColumnVisibility = useCallback(() => {
     if (playerData[0]) {
@@ -141,7 +141,7 @@ console.log(defaultPlayerDetails);
       ),
       size: 300,
       enableSorting: true,
-      sortDescFirst:false,
+      sortDescFirst: false,
     },
     {
       accessorKey: 'jerseyNumber', header: 'Jersey Number', enableSorting: true,
@@ -205,11 +205,11 @@ console.log(defaultPlayerDetails);
     data: playerTablePaginatedData,
     enableTopToolbar: false,
     enableBottomToolbar: false,
-    manualPagination:true,
+    manualPagination: true,
     onPaginationChange: setPagination,
     // onSortingChange: setSorting,
-    enableSorting:true,
-    initialState:{
+    enableSorting: true,
+    initialState: {
       sorting: [{ id: 'playerName', desc: false }],
     },
     state: {
@@ -255,7 +255,7 @@ console.log(defaultPlayerDetails);
         borderRadius:
           cell.column.id === 'playerName'
             ? '10px 0px 0px 10px'
-            : Object.keys((playerTablePaginatedData||[{}])[0])[Object.keys((playerTablePaginatedData||[{}])[0]).length - 1] === cell.column.id ? '0px 10px 10px 0px' : '0px 0px 0px 0px',
+            : Object.keys((playerTablePaginatedData || [{}])[0])[Object.keys((playerTablePaginatedData || [{}])[0]).length - 1] === cell.column.id ? '0px 10px 10px 0px' : '0px 0px 0px 0px',
       },
     }),
     enableTableHead: true,
@@ -291,46 +291,55 @@ console.log(defaultPlayerDetails);
   });
   const handleChangeEditData = async (data: any) => {
     setLoading(true);
-    await fetch(`${process.env.REACT_APP_API_ENDPOINT}/roster`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        id: data.id,
-        playerName: data.playerName,
-        jerseyNumber: data.jerseyNumber,
-        height: data.height,
-        weight: data.weight,
-        nationality: data.nationality,
-        position: data.position,
-        starter: data.starter==='no'?false:true
-      })
-    }).then((res) => {
-      return res.json();
-    }).then((res) => {
-      console.log(res,'deleted res');
-      let newPlayerData=[];
-      newPlayerData=defaultPlayerDetails.map((item: any) => {
+    try {
+      await fetch(`${process.env.REACT_APP_API_ENDPOINT}/roster`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: data.id,
+          playerName: data.playerName,
+          jerseyNumber: data.jerseyNumber,
+          height: data.height,
+          weight: data.weight,
+          nationality: data.nationality,
+          position: data.position,
+          starter: data.starter === 'no' ? false : true
+        })
+      }).then((res) => {
+        if (!res.ok) {
+          throw new Error(`Failed to update player. Status: ${res.status}`);
+        }
+        return res.json();
+      }).then((res) => {
+        console.log(res, 'deleted res');
+        let newPlayerData = [];
+        newPlayerData = defaultPlayerDetails.map((item: any) => {
           if (data.id === item.id) {
             return {
               ...data,
-              starter:data.starter==='no'?false:true
+              starter: data.starter === 'no' ? false : true
             }
           } else {
             return item;
           }
         })
-      dispatch(appActions.updatePlayerDetails(newPlayerData));
-      dispatch(appActions.updateDefaultPlayerDetails(newPlayerData));
+        dispatch(appActions.updatePlayerDetails(newPlayerData));
+        dispatch(appActions.updateDefaultPlayerDetails(newPlayerData));
 
-      setIsActionModalOpen(false);
-      setIsEditOpenModal(false);
-    }).catch((err) => {
-      setErrorMessage(err.message)
-    }).finally(()=>{
-      setLoading(false);
-    })
+        setIsActionModalOpen(false);
+        setIsEditOpenModal(false);
+      }).catch((err) => {
+        // console.log(err)
+        setErrorMessage('Error updating player details. Duplicate data may exist !!')
+      }).finally(() => {
+        setLoading(false);
+      })
+    }
+    catch {
+
+    }
   }
   const deleteRoasterData = async () => {
     setLoading(true);
@@ -339,7 +348,7 @@ console.log(defaultPlayerDetails);
       return item.id !== openPopupRow;
     })
     dispatch(appActions.updatePlayerDetails(newPlayerData));
-        dispatch(appActions.updateDefaultPlayerDetails(newPlayerData));
+    dispatch(appActions.updateDefaultPlayerDetails(newPlayerData));
 
     await fetch(`${process.env.REACT_APP_API_ENDPOINT}/roster/${openPopupRow}`, {
       method: "delete",
