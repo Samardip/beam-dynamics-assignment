@@ -1,5 +1,6 @@
 Football Manager Project
 Deployed link:https://beam-dynamics-assignment.vercel.app/
+backend repository : https://github.com/Beam-Dynamics/frontend_challenge_v2_be
 
 Go to .env file and change api route as per your choice.
 current api base url is: http://localhost:5001/
